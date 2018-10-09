@@ -24,16 +24,21 @@ def delete_old_mail(m, folder, days_before):
     if not data[0] == b'':  # if not empty list means messages exist
         no_msgs_del = data[0].split()[-1].decode()  # last msg id in the list
         print("- Marked {0} messages for removal with dates before {1} in '{2}'.".format(no_msgs_del, before_date, folder))
-        m.store(f"1:{no_msgs_del}", '+FLAGS', '\\Deleted')  # delete immediately
+        m.store(f"1:{no_msgs_del}", '+X-GM-LABELS', '\\Trash')  # move items to the Trash
     else:
         print("- Nothing to remove.")
 
 
 def empty_folder(m, folder, do_expunge=True):
     print("- Empty '{0}' & Expunge all mail...".format(folder))
-    m.select(folder)  # select all trash
+    m.select(folder)  # select entire folder
     if m.state == 'SELECTED':
-        m.store("1:*", '+FLAGS', '\\Deleted')  # Flag all Trash as Deleted
+
+        if folder == '[Gmail]/Bin':
+            m.store("1:*", '+FLAGS', '\\Deleted')  # Items in the bin are already in the Trash
+        else:
+            m.store("1:*", '+X-GM-LABELS', '\\Trash')  # move items to the Trash
+
         if do_expunge:  # See Gmail Settings -> Forwarding and POP/IMAP -> Auto-Expunge
             m.expunge()  # not need if auto-expunge enabled
         else:
@@ -42,14 +47,14 @@ def empty_folder(m, folder, do_expunge=True):
         print("Nothing selected for deletion")
 
     return
- 
- 
+
+
 def disconnect_imap(m):
     print("{0} Done. Closing connection & logging out.".format(datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")))
     m.close()
     m.logout()
     return
- 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Prune a Gmail folder via IMAP.')
     parser.add_argument(
@@ -81,6 +86,6 @@ if __name__ == '__main__':
 
     m_con = connect_imap(username, password)
     delete_old_mail(m_con, folder, age)
-    empty_folder(m_con, '[Gmail]/Bin', do_expunge=False)
+    empty_folder(m_con, '[Gmail]/Bin', do_expunge=True)
     disconnect_imap(m_con)
 
