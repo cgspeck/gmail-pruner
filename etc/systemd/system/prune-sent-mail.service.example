@@ -2,5 +2,4 @@
 Description=Prune Sent Mailbox
 
 [Service]
-Type=oneshot
-ExecStart=/usr/bin/python3 /path/to/prune.py '[Gmail]/Sent Mail' 365
+ExecStart=/usr/bin/python3 /path/to/prune.py '[Gmail]/All Mail' 60

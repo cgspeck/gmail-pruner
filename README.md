@@ -2,7 +2,7 @@
 
 Quick and dirty way to keep your mail box in check. 
 
-Inspired by this [post](http://radtek.ca/blog/delete-old-email-messages-programatically-using-python-imaplib/).
+Inspired by [this](http://radtek.ca/blog/delete-old-email-messages-programatically-using-python-imaplib/) and [this](https://stackoverflow.com/questions/46642764/python-3-move-email-to-trash-by-uid-imaplib) post.
 
 ***USE AT YOUR OWN RISK!***
 
@@ -32,6 +32,6 @@ $ GMAIL_PASS={password} GMAIL_USER='{username}@gmail.com' python prune.py '[Gmai
 
 3. Run `sudo systemctl daemon-reload`.
 
-4. Run `sudo systemctl edit {name}` and set `GMAIL_USER` and `GMAIL_PASS` following this [ServerFault Answer](https://serverfault.com/a/413408/92665).
+4. Run `sudo systemctl edit {name}` and set `GMAIL_USER` and `GMAIL_PASS`.
 
 5. Start and Enable the timer with `systemctl start {name}.timer` and `sudo systemctl enable {name}.timer`.
